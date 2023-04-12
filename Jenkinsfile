@@ -57,13 +57,13 @@ pipeline {
         }
         stage('打包镜像') {
             steps {
-
+                echo '打包镜像'
             }
         }
         
         stage('上传镜像') {
             steps {
-                echo 'Hello World'
+                echo '上传镜像'
             }
         }
     }
