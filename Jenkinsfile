@@ -103,11 +103,12 @@ pipeline {
 		                    echo "firefly容器重启完成"
 	                    else
 		                    echo "不存在容器，docker run创建容器..."
-			                docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}"
+			                docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}
                             if [ "$containerStatus" == "true" ]; then
 		                        echo "容器创建完成"
                             else
                                 echo "容器创建失败"
+                            fi
 	                    fi
                         '''
                     } else {
