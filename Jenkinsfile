@@ -8,14 +8,12 @@ pipeline {
     environment {
         containerId = """${sh(
                 returnStdout: true,
-                script: '
-                        #!/bin/bash
+                script: '#!/bin/bash
                         if [[ -n $(docker ps -q -f "name=cowinhealth-frontend") ]];then
 	                        echo "true"
                         else
 	                        echo "false"
-                        fi
-                        '
+                        fi'
             )}"""
         project_username = 'admin'
         project_password = 'das@123'
