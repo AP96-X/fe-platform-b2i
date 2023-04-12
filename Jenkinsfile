@@ -92,6 +92,10 @@ pipeline {
             steps {
                 script {
                     if (params.deploy == true){
+                                env.containerID = """${sh(
+                                        returnStdout: true,
+                                        script: 'docker ps | grep "cowinhealth-frontend" | awk "{print $1}"'
+                                ).trim()}"""
                         sh '''
                             containerID=$(docker ps | grep 'cowinhealth-frontend' | awk '{print $1}')
                             if [ -n "${containerID}" ]; then
@@ -103,6 +107,12 @@ pipeline {
 	                        fi
                         '''
                         sh "docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}"
+                        env.containerStatus = """${sh(
+                                        returnStdout: true,
+                                        script: 'docker inspect --format "{{.State.Running}}" cowinhealth-frontend'
+                                ).trim()}"""
+                        echo "${containerID}"
+                        echo "${containerStatus}"
                         sh '''
                             containerStatus=$(docker inspect --format '{{.State.Running}}' cowinhealth-frontend)
                             if [ "${containerStatus}" == 'true' ]; then
