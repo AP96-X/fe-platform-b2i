@@ -38,7 +38,7 @@ pipeline {
             }
         }
         stage('构建镜像') {
-            steps('解压制品文件') {
+            steps {
                 sh 'tar zxvf main.tar.gz -C ./main'
                 sh 'tar zxvf administration.tar.gz -C ./main/microApps/administration'
                 sh 'tar zxvf dataIntegration.tar.gz -C ./main/microApps/dataIntegration'
@@ -55,8 +55,8 @@ pipeline {
                 sh 'tar zxvf workbench.tar.gz -C ./main/microApps/workbench'
             }
         }
-        stage() {
-            steps('打包镜像') {
+        stage('打包镜像') {
+            steps {
 
             }
         }
