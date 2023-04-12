@@ -102,7 +102,7 @@ pipeline {
                         sh "docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}"
                         environment {
                             containerStatus = """${sh(
-                                returnStdout: true,
+                                returnStatus: true,
                                 script: 'docker inspect --format "{{.State.Running}}" cowinhealth-frontend'
                             )}"""
                         }
