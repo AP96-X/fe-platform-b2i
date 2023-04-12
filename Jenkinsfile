@@ -92,7 +92,7 @@ pipeline {
             steps {
                 script {
                     if (params.deploy == true){
-                        if ("""${sh(docker ps -a | grep cowinhealth-frontend | awk '{print $1}'")}""" != '') {
+                        if ("""${sh(docker ps -a | grep cowinhealth-frontend | awk '{print $1}')}""" != '') {
                             sh "docker stop cowinhealth-frontend && docker rm cowinhealth-frontend"
                         }
                         sh "docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}"
