@@ -103,11 +103,11 @@ pipeline {
                         environment {
                             containerStatus = """${sh(
                                 returnStdout: true,
-                                script: 'docker inspect --format "{{.State.ExitCode}}" cowinhealth-frontend'
+                                script: 'docker ps | grep cowinhealth-frontend | awk "{print $1}"'
                             )}"""
                         }
                         echo "${env.containerStatus}"
-                        if ("${env.containerStatus}" == '0'){
+                        if ("${env.containerStatus}" != ''){
                             echo '部署服务成功'
                             echo '发送邮件'
                         } else {
