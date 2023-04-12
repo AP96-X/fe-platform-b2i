@@ -99,11 +99,11 @@ pipeline {
 		                    echo "存在容器，CID=${containerID},重启docker容器 ..."
 			                docker stop ${containerID}
 			                docker rm ${containerID}
-			                docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}
-		                    echo "firefly容器重启完成"
+			                docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:"${params.version}"
+		                    echo "容器重启完成"
 	                    else
 		                    echo "不存在容器，docker run创建容器..."
-			                docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}
+			                docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:"${params.version}"
                             if [ "$containerStatus" == "true" ]; then
 		                        echo "容器创建完成"
                             else
