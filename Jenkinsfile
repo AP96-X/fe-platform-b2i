@@ -63,14 +63,14 @@ pipeline {
         }
         stage('打包镜像') {
             steps {
-                sh 'docker build -t 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version} -f frontend.Dockerfile .'
+                sh "docker build -t 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version} -f frontend.Dockerfile ."
             }
         }
         
         stage('上传镜像') {
             steps {
                 script {
-                    if (parames.upload == true){
+                    if (${parames.upload} == true){
                         echo '上传镜像'
                     } else {
                         echo '跳过上传镜像'
@@ -82,7 +82,7 @@ pipeline {
         stage('部署服务') {
             steps {
                 script {
-                    if (parames.deploy == true){
+                    if (${parames.deploy} == true){
                         echo '部署服务'
                     } else {
                         echo '跳过部署服务'
