@@ -70,7 +70,7 @@ pipeline {
         stage('上传镜像') {
             steps {
                 script {
-                    if ("${params.upload}" == true){
+                    if (params.upload == true){
                         echo '上传镜像'
                     } else {
                         echo '跳过上传镜像'
@@ -82,7 +82,7 @@ pipeline {
         stage('部署服务') {
             steps {
                 script {
-                    if ("${params.deploy}" == true){
+                    if (params.deploy == true){
                         sh "docker stop cowinhealth-frontend && docker rm cowinhealth-frontend"
                         sh "docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}"
                         echo '部署成功'
