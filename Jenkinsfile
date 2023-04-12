@@ -70,12 +70,6 @@ pipeline {
         }
         stage('打包镜像') {
             steps {
-                sh '''
-                    ole_image_id=`docker images|grep 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version} | awk '{print $3}'`
-                    if [[ -n "${ole_image_id}" ]]; then
-                        docker rmi -f ${ole_image_id}
-                    fi
-                '''
                 sh "docker build -t 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version} -f frontend.Dockerfile ."
             }
         }
