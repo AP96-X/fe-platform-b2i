@@ -57,7 +57,7 @@ pipeline {
         }
         stage('打包镜像') {
             steps {
-                echo '打包镜像'
+                sh 'docker build -t fe-platform-frontend:v1.0.0 -f frontend.Dockerfile .'
             }
         }
         
