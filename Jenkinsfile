@@ -83,7 +83,9 @@ pipeline {
             steps {
                 script {
                     if ("${params.deploy}" == true){
-                        echo '部署服务'
+                        sh "docker stop cowinhealth-frontend && docker rm cowinhealth-frontend"
+                        sh "docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}"
+                        echo '部署成功'
                     } else {
                         echo '跳过部署服务'
                     }
