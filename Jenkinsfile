@@ -95,10 +95,10 @@ pipeline {
                     if (params.deploy == true){
                         sh """
                         containerID=$(docker ps | grep 'cowinhealth-frontend' | awk '{print $1}')
-                        if [ -n '$containerID' ]; then
-		                    echo '存在容器，CID=$containerID,重启docker容器 ...'
-			                docker stop $containerID
-			                docker rm $containerID
+                        if [ -n '\$containerID' ]; then
+		                    echo '存在容器，CID=\$containerID,重启docker容器 ...'
+			                docker stop \$containerID
+			                docker rm \$containerID
 			                docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${env.Version}
 		                    echo '容器重启完成'
 	                    else
@@ -106,7 +106,7 @@ pipeline {
 			                docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${env.Version}
 	                    fi
                         containerStatus=$(docker inspect --format '{{.State.Running}}' cowinhealth-frontend)
-                        if [ '$containerStatus' == 'true' ]; then
+                        if [ '\$containerStatus' == 'true' ]; then
 		                    echo '容器创建完成'
                         else
                             echo '容器创建失败'
