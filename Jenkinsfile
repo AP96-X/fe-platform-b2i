@@ -2,8 +2,8 @@ pipeline {
     agent { label 'master' }
 
     stages {
-        stage('获取制品') {
-            steps('获取制品文件') {
+        stage('获取制品文件') {
+            steps {
                 sh 'cp ../fe-platform-main/dist/dist.tar.gz ./main.tar.gz'
                 sh 'cp ../fe-platform-administration/dist/dist.tar.gz ./administration.tar.gz'
                 sh 'cp ../fe-platform-dataIntegration/dist/dist.tar.gz ./dataIntegration.tar.gz'
@@ -19,7 +19,9 @@ pipeline {
                 sh 'cp ../fe-platform-sys-setting/dist/dist.tar.gz ./sys-setting.tar.gz'
                 sh 'cp ../fe-platform-workbench/dist/dist.tar.gz ./workbench.tar.gz'
             }
-            steps('建立制品文件夹') {
+        }
+        stage('建立制品文件夹') {
+            steps {
                 sh 'mkdir -p ./main/microApps/administration'
                 sh 'mkdir -p ./main/microApps/dataIntegration'
                 sh 'mkdir -p ./main/microApps/dataservices'
@@ -52,10 +54,13 @@ pipeline {
                 sh 'tar zxvf sys-setting.tar.gz -C ./main/microApps/sysSetting'
                 sh 'tar zxvf workbench.tar.gz -C ./main/microApps/workbench'
             }
+        }
+        stage() {
             steps('打包镜像') {
 
             }
         }
+        
         stage('上传镜像') {
             steps {
                 echo 'Hello World'
