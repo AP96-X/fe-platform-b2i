@@ -5,6 +5,13 @@ pipeline {
         booleanParam(name: 'deploy', defaultValue: true, description: '是否立刻部署服务')
     }
 
+    environment {
+        project_username='admin'
+        project_password='das@123'
+        harbor_address='192.168.5.39'
+        harbor_project='cowinhealth'
+    }
+
     agent { label 'master' }
 
     stages {
@@ -71,7 +78,9 @@ pipeline {
             steps {
                 script {
                     if (params.upload == true){
-                        echo '上传镜像'
+                        sh "docker login ${env.harbor_address} --username ${env.project_username} --password ${env.project_password}"
+                        sh "docker push 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}"
+                        echo '上传镜像成功'
                     } else {
                         echo '跳过上传镜像'
                     }
@@ -83,9 +92,11 @@ pipeline {
             steps {
                 script {
                     if (params.deploy == true){
-                        sh "docker stop cowinhealth-frontend && docker rm cowinhealth-frontend"
+                        if ("""${sh(docker ps -a | grep cowinhealth-frontend | awk '{print $1}'")}""" != '') {
+                            sh "docker stop cowinhealth-frontend && docker rm cowinhealth-frontend"
+                        }
                         sh "docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}"
-                        echo '部署成功'
+                        echo '部署服务成功'
                     } else {
                         echo '跳过部署服务'
                     }
