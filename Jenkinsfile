@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        Version=${params.version}
+        Version="${params.version}"
         project_username = 'admin'
         project_password = 'das@123'
         harbor_address = '192.168.5.39'
