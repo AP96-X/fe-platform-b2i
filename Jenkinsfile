@@ -1,4 +1,10 @@
 pipeline {
+    parameters {
+        string(name: 'version', defaultValue: 'v1.0.0', description: '本次构建的版本号')
+        booleanParam(name: 'upload', defaultValue: true, description: '是否立刻上传镜像')
+        booleanParam(name: 'deploy', defaultValue: true, description: '是否立刻部署服务')
+    }
+
     agent { label 'master' }
 
     stages {
@@ -57,13 +63,31 @@ pipeline {
         }
         stage('打包镜像') {
             steps {
-                sh 'docker build -t 192.168.5.39/cowinhealth/cowinhealth-frontend:v1.0.0 -f frontend.Dockerfile .'
+                sh 'docker build -t 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version} -f frontend.Dockerfile .'
             }
         }
         
         stage('上传镜像') {
             steps {
-                echo '上传镜像'
+                script {
+                    if (parames.upload == true){
+                        echo '上传镜像'
+                    } else {
+                        echo '跳过上传镜像'
+                    }
+                }
+            }
+        }
+
+        stage('部署服务') {
+            steps {
+                script {
+                    if (parames.deploy == true){
+                        echo '部署服务'
+                    } else {
+                        echo '跳过部署服务'
+                    }
+                }
             }
         }
     }
