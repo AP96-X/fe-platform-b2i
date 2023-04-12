@@ -94,7 +94,7 @@ pipeline {
                 script {
                     if (params.deploy == true){
                         sh """
-                        containerID=$(docker ps | grep 'cowinhealth-frontend' | awk '{print $1}')
+                        containerID=\$(docker ps | grep 'cowinhealth-frontend' | awk '{print $1}')
                         if [ -n '\$containerID' ]; then
 		                    echo '存在容器，CID=\$containerID,重启docker容器 ...'
 			                docker stop \$containerID
