@@ -94,33 +94,24 @@ pipeline {
                     if (params.deploy == true){
                                 env.containerID = """${sh(
                                         returnStdout: true,
-                                        script: 'docker ps -a | grep "cowinhealth-frontend" | awk '{print $1}''
+                                        script: 'docker ps -a | grep "cowinhealth-frontend" | awk "{print $1}"'
                                 ).trim()}"""
                         echo "1.${containerID}"
-                        sh '''
-                            containerID=$(docker ps | grep 'cowinhealth-frontend' | awk '{print $1}')
-                            if [ -n "${containerID}" ]; then
-		                        echo "存在容器，CID="${containerID}",停止和删除旧的docker容器 ..."
-			                    docker stop "${containerID}"
-			                    docker rm "${containerID}"
-	                        else
-		                        echo '不存在容器，docker run创建容器...'
-	                        fi
-                        '''
+                        if ("${containerID}" != '') {
+                            sh "docker stop cowinhealth-frontend"
+                            sh "docker rm cowinhealth-frontend"
+                        }
                         sh "docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}"
                         env.containerStatus = """${sh(
                                         returnStdout: true,
                                         script: 'docker inspect --format "{{.State.Running}}" cowinhealth-frontend'
                                 ).trim()}"""
                         echo "2.${containerStatus}"
-                        sh '''
-                            containerStatus=$(docker inspect --format '{{.State.Running}}' cowinhealth-frontend)
-                            if [ "${containerStatus}" == 'true' ]; then
-		                        echo '容器创建完成'
-                            else
-                                echo '容器创建失败'
-                            fi
-                            '''
+                        if ("${containerStatus}" == "true") {
+                            echo "容器创建完成"
+                        } else {
+                            echo "容器创建失败"
+                        }
                     } else {
                         echo '跳过部署服务'
                     }
