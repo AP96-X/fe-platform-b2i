@@ -92,7 +92,7 @@ pipeline {
             steps {
                 script {
                     if (params.deploy == true){
-                        sh """
+                        sh '''
                         containerID=$(docker ps | grep "cowinhealth-frontend" | awk '{print $1}')
                         containerStatus=$(docker inspect --format '{{.State.Running}}' cowinhealth-frontend)
                         if [ -n "$containerID" ]; then
@@ -109,7 +109,7 @@ pipeline {
                             else
                                 echo "容器创建失败"
 	                    fi
-                        """
+                        '''
                     } else {
                         echo '跳过部署服务'
                     }
