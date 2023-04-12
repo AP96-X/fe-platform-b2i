@@ -8,7 +8,14 @@ pipeline {
     environment {
         containerId = """${sh(
                 returnStdout: true,
-                script: 'docker ps -a | grep cowinhealth-frontend | awk "{print $1}"'
+                script: '
+                        #!/bin/bash
+                        if [[ -n $(docker ps -q -f "name=cowinhealth-frontend") ]];then
+	                        echo "true"
+                        else
+	                        echo "false"
+                        fi
+                        '
             )}"""
         project_username = 'admin'
         project_password = 'das@123'
@@ -96,6 +103,7 @@ pipeline {
             steps {
                 script {
                     if (params.deploy == true){
+                        echo "${env.containerId}"
                         if ("${env.containerId}" != "") {
                             sh "docker stop cowinhealth-frontend && docker rm cowinhealth-frontend"
                         }
