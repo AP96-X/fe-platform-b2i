@@ -6,7 +6,6 @@ pipeline {
     }
 
     environment {
-        Version="${params.version}"
         project_username = 'admin'
         project_password = 'das@123'
         harbor_address = '192.168.5.39'
@@ -99,11 +98,11 @@ pipeline {
 		                    echo "存在容器，CID="${containerID}",重启docker容器 ..."
 			                docker stop "${containerID}"
 			                docker rm "${containerID}"
-			                docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:"\"\${env.Version}\"
+			                docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:"\"${params.version}\"
 		                    echo '容器重启完成'
 	                    else
 		                    echo '不存在容器，docker run创建容器...'
-			                docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:\"\${env.Version}\"
+			                docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:\"${params.version}\"
 	                    fi
                         containerStatus=$(docker inspect --format '{{.State.Running}}' cowinhealth-frontend)
                         if [ "${containerStatus}" == 'true' ]; then
