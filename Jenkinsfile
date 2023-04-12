@@ -6,10 +6,14 @@ pipeline {
     }
 
     environment {
-        project_username='admin'
-        project_password='das@123'
-        harbor_address='192.168.5.39'
-        harbor_project='cowinhealth'
+        containerId = """${sh(
+                returnStdout: true,
+                script: 'docker ps -a | grep cowinhealth-frontend | awk "{print $1}"'
+            )}"""
+        project_username = 'admin'
+        project_password = 'das@123'
+        harbor_address = '192.168.5.39'
+        harbor_project = 'cowinhealth'
     }
 
     agent { label 'master' }
@@ -92,8 +96,7 @@ pipeline {
             steps {
                 script {
                     if (params.deploy == true){
-                        containerId = $(docker ps -a | grep cowinhealth-frontend | awk '{print $1}')
-                        if (containerId != "") {
+                        if ("${env.containerId}" != "") {
                             sh "docker stop cowinhealth-frontend && docker rm cowinhealth-frontend"
                         }
                         sh "docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}"
