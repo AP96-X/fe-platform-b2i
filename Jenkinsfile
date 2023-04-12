@@ -57,7 +57,7 @@ pipeline {
         }
         stage('打包镜像') {
             steps {
-                sh 'docker build -t fe-platform-frontend:v1.0.0 -f frontend.Dockerfile .'
+                sh 'docker build -t 192.168.5.39/cowinhealth/cowinhealth-frontend:v1.0.0 -f frontend.Dockerfile .'
             }
         }
         
