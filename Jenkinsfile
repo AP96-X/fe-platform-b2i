@@ -94,7 +94,7 @@ pipeline {
                     if (params.deploy == true){
                                 env.containerID = """${sh(
                                         returnStdout: true,
-                                        script: 'docker ps | grep "cowinhealth-frontend" | awk "{print $1}"'
+                                        script: 'docker ps -a | grep "cowinhealth-frontend" | awk '{print $1}''
                                 ).trim()}"""
                         echo "1.${containerID}"
                         sh '''
