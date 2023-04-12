@@ -6,15 +6,6 @@ pipeline {
     }
 
     environment {
-        containerId = """${sh(
-                returnStdout: true,
-                script: '#!/bin/bash
-                        if [[ -n $(docker ps -q -f "name=cowinhealth-frontend") ]];then
-	                        echo "true"
-                        else
-	                        echo "false"
-                        fi'
-            )}"""
         project_username = 'admin'
         project_password = 'das@123'
         harbor_address = '192.168.5.39'
@@ -101,26 +92,24 @@ pipeline {
             steps {
                 script {
                     if (params.deploy == true){
-                        echo "${env.containerId}"
-                        if ("${env.containerId}" != "") {
-                            sh "docker stop cowinhealth-frontend && docker rm cowinhealth-frontend"
-                        }
-                        sh "docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}"
-                        environment {
-                            containerStatus = """${sh(
-                                returnStdout: true,
-                                script: 'docker ps | grep cowinhealth-frontend | awk "{print $1}"'
-                            )}"""
-                        }
-                        echo "${env.containerStatus}"
-                        if ("${env.containerStatus}" != ''){
-                            echo '部署服务成功'
-                            echo '发送邮件'
-                        } else {
-                            echo '部署服务失败'
-                            echo '发送邮件'
-                        }
-                        
+                        sh """
+                        containerID=$(docker ps | grep "cowinhealth-frontend" | awk '{print $1}')
+                        containerStatus=$(docker inspect --format '{{.State.Running}}' cowinhealth-frontend)
+                        if [ -n "$containerID" ]; then
+		                    echo "存在容器，CID=$containerID,重启docker容器 ..."
+			                docker stop $containerID
+			                docker rm $containerID	
+			                docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}
+		                    echo "firefly容器重启完成"
+	                    else
+		                    echo "不存在容器，docker run创建容器..."
+			                docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}"
+                            if [ "$containerStatus" == "true" ]; then
+		                        echo "容器创建完成"
+                            else
+                                echo "容器创建失败"
+	                    fi
+                        """
                     } else {
                         echo '跳过部署服务'
                     }
