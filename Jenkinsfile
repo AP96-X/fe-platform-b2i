@@ -96,9 +96,9 @@ pipeline {
                         sh """
                         containerID=$(docker ps | grep 'cowinhealth-frontend' | awk '{print $1}')
                         if [ -n '$containerID' ]; then
-		                    echo '存在容器，CID=${containerID},重启docker容器 ...'
-			                docker stop ${containerID}
-			                docker rm ${containerID}
+		                    echo '存在容器，CID=$containerID,重启docker容器 ...'
+			                docker stop $containerID
+			                docker rm $containerID
 			                docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${env.Version}
 		                    echo '容器重启完成'
 	                    else
