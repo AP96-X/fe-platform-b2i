@@ -102,12 +102,12 @@ pipeline {
                         sh "docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}"
                         environment {
                             containerStatus = """${sh(
-                                returnStatus: true,
-                                script: 'docker inspect --format "{{.State.Running}}" cowinhealth-frontend'
+                                returnStdout: true,
+                                script: 'docker inspect --format "{{.State.ExitCode}}" cowinhealth-frontend'
                             )}"""
                         }
                         echo "${env.containerStatus}"
-                        if ("${env.containerStatus}" == true){
+                        if ("${env.containerStatus}" == '0'){
                             echo '部署服务成功'
                             echo '发送邮件'
                         } else {
