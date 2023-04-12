@@ -106,7 +106,8 @@ pipeline {
                                 script: 'docker inspect --format "{{.State.Running}}" cowinhealth-frontend'
                             )}"""
                         }
-                        if ("${env.containerStatus}" == "true"){
+                        echo "${env.containerStatus}"
+                        if ("${env.containerStatus}" == true){
                             echo '部署服务成功'
                             echo '发送邮件'
                         } else {
