@@ -96,6 +96,7 @@ pipeline {
                                         returnStdout: true,
                                         script: 'docker ps | grep "cowinhealth-frontend" | awk "{print $1}"'
                                 ).trim()}"""
+                        echo "1.${containerID}"
                         sh '''
                             containerID=$(docker ps | grep 'cowinhealth-frontend' | awk '{print $1}')
                             if [ -n "${containerID}" ]; then
@@ -111,8 +112,7 @@ pipeline {
                                         returnStdout: true,
                                         script: 'docker inspect --format "{{.State.Running}}" cowinhealth-frontend'
                                 ).trim()}"""
-                        echo "${containerID}"
-                        echo "${containerStatus}"
+                        echo "2.${containerStatus}"
                         sh '''
                             containerStatus=$(docker inspect --format '{{.State.Running}}' cowinhealth-frontend)
                             if [ "${containerStatus}" == 'true' ]; then
