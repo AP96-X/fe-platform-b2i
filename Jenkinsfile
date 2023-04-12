@@ -100,7 +100,20 @@ pipeline {
                             sh "docker stop cowinhealth-frontend && docker rm cowinhealth-frontend"
                         }
                         sh "docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}"
-                        echo '部署服务成功'
+                        environment {
+                            containerStatus = """${sh(
+                                returnStdout: true,
+                                script: 'docker inspect --format "{{.State.Running}}" cowinhealth-frontend'
+                            )}"""
+                        }
+                        if ("${env.containerStatus}" == "true"){
+                            echo '部署服务成功'
+                            echo '发送邮件'
+                        } else {
+                            echo '部署服务失败'
+                            echo '发送邮件'
+                        }
+                        
                     } else {
                         echo '跳过部署服务'
                     }
