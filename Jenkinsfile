@@ -70,7 +70,7 @@ pipeline {
         stage('上传镜像') {
             steps {
                 script {
-                    if (${parames.upload} == true){
+                    if (${params.upload} == true){
                         echo '上传镜像'
                     } else {
                         echo '跳过上传镜像'
@@ -82,7 +82,7 @@ pipeline {
         stage('部署服务') {
             steps {
                 script {
-                    if (${parames.deploy} == true){
+                    if (${params.deploy} == true){
                         echo '部署服务'
                     } else {
                         echo '跳过部署服务'
