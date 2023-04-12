@@ -70,6 +70,12 @@ pipeline {
         }
         stage('打包镜像') {
             steps {
+                sh '''
+                    ole_image_id=`docker images|grep 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version} | awk '{print $3}'`
+                    if [[ -n "${ole_image_id}" ]]; then
+                        docker rmi -f ${ole_image_id}
+                    fi
+                '''
                 sh "docker build -t 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version} -f frontend.Dockerfile ."
             }
         }
@@ -95,7 +101,7 @@ pipeline {
                         sh '''
                             containerID=$(docker ps | grep 'cowinhealth-frontend' | awk '{print $1}')
                             if [ -n "${containerID}" ]; then
-		                        echo "存在容器，CID="${containerID}",重启docker容器 ..."
+		                        echo "存在容器，CID="${containerID}",停止和删除旧的docker容器 ..."
 			                    docker stop "${containerID}"
 			                    docker rm "${containerID}"
 	                        else
