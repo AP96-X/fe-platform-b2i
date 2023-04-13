@@ -76,9 +76,10 @@ pipeline {
                 env.imageID = """
                 ${sh(
                     returnStdout: true,
-                    script: "docker images | grep 'cowinhealth-frontend' | awk '{print $3}'"
+                    script: "docker images | grep 'cowinhealth-frontend' | awk '{print \$3}'"
                 ).trim()}
                 """
+                echo "${imageID}"
                 if ("${imageID}" != "") {
                     sh "docker rmi ${imageID}"
                 }
@@ -107,7 +108,7 @@ pipeline {
                         env.containerID = """
                         ${sh(
                             returnStdout: true,
-                            script: "docker ps -a | grep 'cowinhealth-frontend' | awk '{print $1}'"
+                            script: "docker ps -a | grep 'cowinhealth-frontend' | awk '{print \$1}'"
                         ).trim()}
                         """
                         echo "1.${containerID}"
