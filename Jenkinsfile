@@ -2,7 +2,7 @@ pipeline {
     parameters {
         string(name: 'version', defaultValue: 'v1.0.0', description: '本次构建的版本号')
         booleanParam(name: 'upload', defaultValue: false, description: '是否立刻上传镜像')
-        booleanParam(name: 'deploy', defaultValue: true, description: '是否立刻部署服务')
+        booleanParam(name: 'deploy', defaultValue: false, description: '是否立刻部署服务')
     }
 
     environment {
