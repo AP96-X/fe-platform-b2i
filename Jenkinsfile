@@ -52,7 +52,7 @@ pipeline {
             }
         }
 
-        stage('构建镜像') {
+        stage('解包制品') {
             steps {
                 sh 'tar zxvf main.tar.gz -C ./main'
                 sh 'tar zxvf administration.tar.gz -C ./main/microApps/administration'
