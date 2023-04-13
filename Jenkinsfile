@@ -73,17 +73,19 @@ pipeline {
 
         stage('打包镜像') {
             steps {
-                env.imageID = """
-                ${sh(
-                    returnStdout: true,
-                    script: "docker images | grep 'cowinhealth-frontend' | awk '{print \$3}'"
-                ).trim()}
-                """
-                echo "${imageID}"
-                if ("${imageID}" != "") {
-                    sh "docker rmi ${imageID}"
+                script {
+                    env.imageID = """
+                    ${sh(
+                        returnStdout: true,
+                        script: "docker images | grep 'cowinhealth-frontend' | awk '{print \$3}'"
+                    ).trim()}
+                    """
+                    echo "${imageID}"
+                    if ("${imageID}" != "") {
+                        sh "docker rmi ${imageID}"
+                    }
+                    sh "docker build -t 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version} -f frontend.Dockerfile ."
                 }
-                sh "docker build -t 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version} -f frontend.Dockerfile ."
             }
         }
         
