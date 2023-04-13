@@ -74,12 +74,10 @@ pipeline {
         stage('打包镜像') {
             steps {
                 script {
-                    env.imageID = """
-                    ${sh(
-                        returnStdout: false,
+                    env.imageID =sh(
+                        returnStdout: true,
                         script: 'docker images --filter "reference=192.168.5.39/cowinhealth/cowinhealth-frontend" --format {{.ID}}'
-                    ).trim()}
-                    """
+                    ).trim()
                     echo "imageID:${imageID}"
                     if ("${imageID}" != "") {
                         sh "docker rmi ${imageID}"
