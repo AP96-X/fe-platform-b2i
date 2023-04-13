@@ -78,7 +78,7 @@ pipeline {
                     ${sh(
                         returnStdout: true,
                         script: 'docker images --filter "reference=192.168.5.39/cowinhealth/cowinhealth-frontend" --format {{.ID}}'
-                    )}
+                    ).replace(" ", "")}
                     """
                     echo "imageID:${imageID}"
                     if ("${imageID}" != "") {
