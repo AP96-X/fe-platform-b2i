@@ -33,6 +33,7 @@ pipeline {
                 sh 'cp ../fe-platform-workbench/dist/dist.tar.gz ./workbench.tar.gz'
             }
         }
+
         stage('建立制品文件夹') {
             steps {
                 sh 'mkdir -p ./main/microApps/administration'
@@ -50,6 +51,7 @@ pipeline {
                 sh 'mkdir -p ./main/microApps/workbench'
             }
         }
+
         stage('构建镜像') {
             steps {
                 sh 'tar zxvf main.tar.gz -C ./main'
@@ -68,6 +70,7 @@ pipeline {
                 sh 'tar zxvf workbench.tar.gz -C ./main/microApps/workbench'
             }
         }
+
         stage('打包镜像') {
             steps {
                 sh "docker build -t 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version} -f frontend.Dockerfile ."
@@ -92,10 +95,10 @@ pipeline {
             steps {
                 script {
                     if (params.deploy == true){
-                                env.containerID = """${sh(
-                                        returnStdout: true,
-                                        script: 'docker ps -a | grep "cowinhealth-frontend" | awk "{print $1}"'
-                                ).trim()}"""
+                        env.containerID = """${sh(
+                            returnStdout: true,
+                            script: "docker ps -a | grep 'cowinhealth-frontend' | awk '{print $1}'"
+                        ).trim()}"""
                         echo "1.${containerID}"
                         if ("${containerID}" != '') {
                             sh "docker stop cowinhealth-frontend"
@@ -103,9 +106,9 @@ pipeline {
                         }
                         sh "docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}"
                         env.containerStatus = """${sh(
-                                        returnStdout: true,
-                                        script: 'docker inspect --format "{{.State.Running}}" cowinhealth-frontend'
-                                ).trim()}"""
+                            returnStdout: true,
+                            script: 'docker inspect --format "{{.State.Running}}" cowinhealth-frontend'
+                        ).trim()}"""
                         echo "2.${containerStatus}"
                         if ("${containerStatus}" == "true") {
                             echo "容器创建完成"
