@@ -77,10 +77,10 @@ pipeline {
                     env.imageID = """
                     ${sh(
                         returnStdout: true,
-                        script: "docker images | grep 'cowinhealth-frontend' | awk '{print \$3}'"
+                        script: 'docker images --filter "reference=192.168.5.39/cowinhealth/cowinhealth-frontend" --format {{.ID}}'
                     ).trim()}
                     """
-                    echo "${imageID}"
+                    echo "imageID:${imageID}"
                     if ("${imageID}" != "") {
                         sh "docker rmi ${imageID}"
                     }
@@ -110,10 +110,10 @@ pipeline {
                         env.containerID = """
                         ${sh(
                             returnStdout: true,
-                            script: "docker ps -a | grep 'cowinhealth-frontend' | awk '{print \$1}'"
+                            script: 'docker ps -a --filter "name=cowinhealth-frontend" --format {{.ID}}'
                         ).trim()}
                         """
-                        echo "1.${containerID}"
+                        echo "containerID:${containerID}"
                         if ("${containerID}" != '') {
                             sh "docker stop cowinhealth-frontend"
                             sh "docker rm cowinhealth-frontend"
@@ -125,7 +125,7 @@ pipeline {
                             script: 'docker inspect --format "{{.State.Running}}" cowinhealth-frontend'
                         ).trim()}
                         """
-                        echo "2.${containerStatus}"
+                        echo "containerStatus:${containerStatus}"
                         if ("${containerStatus}" == "true") {
                             echo "容器创建完成"
                         } else {
