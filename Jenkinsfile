@@ -105,24 +105,20 @@ pipeline {
             steps {
                 script {
                     if (params.deploy == true){
-                        env.containerID = """
-                        ${sh(
+                        env.containerID = sh(
                             returnStdout: true,
                             script: 'docker ps -a --filter "name=cowinhealth-frontend" --format {{.ID}}'
-                        ).trim()}
-                        """
+                        ).trim()
                         echo "containerID:${containerID}"
                         if ("${containerID}" != '') {
                             sh "docker stop cowinhealth-frontend"
                             sh "docker rm cowinhealth-frontend"
                         }
                         sh "docker run -d -p 4010:4010 --name=cowinhealth-frontend 192.168.5.39/cowinhealth/cowinhealth-frontend:${params.version}"
-                        env.containerStatus = """
-                        ${sh(
+                        env.containerStatus = sh(
                             returnStdout: true,
                             script: 'docker inspect --format "{{.State.Running}}" cowinhealth-frontend'
-                        ).trim()}
-                        """
+                        ).trim()
                         echo "containerStatus:${containerStatus}"
                         if ("${containerStatus}" == "true") {
                             echo "容器创建完成"
